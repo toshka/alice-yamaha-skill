@@ -17,3 +17,5 @@ if os.path.exists(config_filename):
 YAMAHA_INPUT_MAP = yaml_config.get("input_map", {})
 
 USERS = yaml_config.get("users", [])
+
+VOLUME_LIMIT = yaml_config.get("volume_limit", {"min": -80, "max": 16})

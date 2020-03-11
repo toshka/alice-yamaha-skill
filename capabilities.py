@@ -8,13 +8,18 @@ from exceptions import ActionError
 
 
 class Capability:
+    """Базовый класс для описания возможностей устройства.
+     К примеру, возможность переключения источника сигнала или увеличение громкости"""
 
     name: str
 
     def get_state(self, device: RXV) -> dict:
+        """Текущее состояние устройства применительно к данной возможности"""
         return {}
 
     def get_params(self) -> dict:
+        """Параметры, необходимые Алисе для корректной работы возможности. Формируются в соответствии с требованиями
+         по разработке навыков для Алисы."""
         return {}
 
     def get_common_info(self) -> dict:
@@ -29,15 +34,18 @@ class Capability:
         return data
 
     def _run_rx_device_action(self, device: RXV, data: dict):
+        """Изменение состояния устройства в соответствии с параметрами, полученными от Алисы."""
         pass
 
     def get_action_success_response(self, data: dict) -> dict:
+        """Формирование ответа в случае успешного изменения состояния устройства."""
         response = deepcopy(data)
         response["state"].pop("value")
         response["state"]["action_result"] = {"status": "DONE"}
         return response
 
     def get_action_error_response(self, data: dict, error_message: str = None) -> dict:
+        """Формирование ответа при возникновении ошибки при изменении состояния устройства."""
         response = deepcopy(data)
         response["state"].pop("value")
         response["state"]["action_result"] = {
@@ -76,7 +84,10 @@ class CapabilityRange(Capability):
             "parameters": {
                 "instance": "volume",
                 "random_access": True,
-                "range": {"min": -80, "max": 16, "precision": 1},
+                "range": {
+                    "min": config.VOLUME_LIMIT["min"],
+                    "max": config.VOLUME_LIMIT["max"],
+                    "precision": 1},
             }
         }
 
